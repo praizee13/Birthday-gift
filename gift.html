@@ -49,8 +49,8 @@
       <div class="center">
         <div class="bold-black">here's my gift, accept it</div>
 
-        <img id="catImage1" class="cat" 
-src="https://i.pinimg.com/736x/09/9f/30/099f30285d042599035d5bb3f4ca34c3.jpg" 
+        <img id="catImage1" class="cat"
+src="https://i.pinimg.com/736x/09/9f/30/099f30285d042599035d5bb3f4ca34c3.jpg"
 alt="cat image">
 
         <div class="buttons">
@@ -65,8 +65,8 @@ alt="cat image">
       <div class="center">
         <div class="bold-black">I gifted you, please accept it 🥺</div>
 
-        <img id="catImage2" class="cat" 
-src="https://i.pinimg.com/736x/07/34/8e/07348ec4f1163dc218b4b0fe1995b90d.jpg" 
+        <img id="catImage2" class="cat"
+src="https://i.pinimg.com/736x/07/34/8e/07348ec4f1163dc218b4b0fe1995b90d.jpg"
 alt="cat image">
 
         <div class="small-note">It took me time to make this for you. Please, just try again?</div>
@@ -149,6 +149,7 @@ alt="cat image">
   <audio id="audio3" src="SONG3_PATH"></audio>
 
   <script>
+    // get elements
     const page1 = document.getElementById('page1');
     const pageTry = document.getElementById('pageTry');
     const giftsPage = document.getElementById('giftsPage');
@@ -156,79 +157,87 @@ alt="cat image">
     const gift2Detail = document.getElementById('gift2Detail');
     const gift3Detail = document.getElementById('gift3Detail');
 
+    // simple helpers
+    function show(node){ node.classList.remove('hidden'); }
+    function hide(node){ node.classList.add('hidden'); }
+
+    // wire basic buttons (direct)
     document.getElementById('dontNeedBtn').addEventListener('click', ()=>{
-      page1.classList.add('hidden');
-      pageTry.classList.remove('hidden');
+      hide(page1); show(pageTry);
     });
-
     document.getElementById('tryAgainBtn').addEventListener('click', ()=>{
-      pageTry.classList.add('hidden');
-      page1.classList.remove('hidden');
+      hide(pageTry); show(page1);
     });
-
     document.getElementById('openGiftBtn').addEventListener('click', ()=>{
-      page1.classList.add('hidden');
-      giftsPage.classList.remove('hidden');
+      hide(page1); show(giftsPage);
     });
-
     document.getElementById('backToStartFromGifts').addEventListener('click', ()=>{
-      giftsPage.classList.add('hidden');
-      page1.classList.remove('hidden');
+      hide(giftsPage); show(page1);
     });
 
-    // GIFT 1
-    document.getElementById('gift1').addEventListener('click', ()=>{
-      giftsPage.classList.add('hidden');
-      gift1Detail.classList.remove('hidden');
-      const audio = document.getElementById('audio1');
-      audio.pause();
-      audio.currentTime = 0;
-      audio.play().catch(()=>{});
+    // delegated click handler (more reliable)
+    document.addEventListener('click', function(e){
+      // Gift 1 open
+      if (e.target.closest('#gift1')) {
+        hide(giftsPage); show(gift1Detail);
+        const audio = document.getElementById('audio1');
+        audio.pause(); audio.currentTime = 0;
+        audio.play().catch(()=>{});
+        return;
+      }
+
+      // Gift 2 open
+      if (e.target.closest('#gift2')) {
+        hide(giftsPage); show(gift2Detail);
+        return;
+      }
+
+      // Gift 3 open
+      if (e.target.closest('#gift3')) {
+        hide(giftsPage); show(gift3Detail);
+        return;
+      }
+
+      // Back from Gift1
+      if (e.target.closest('#backToGifts1')) {
+        const a = document.getElementById('audio1');
+        if (a){ a.pause(); a.currentTime = 0; }
+        hide(gift1Detail); show(giftsPage);
+        return;
+      }
+
+      // Back from Gift2
+      if (e.target.closest('#backToGifts2')) {
+        hide(gift2Detail); show(giftsPage);
+        return;
+      }
+
+      // Back from Gift3
+      if (e.target.closest('#backToGifts3')) {
+        const a3 = document.getElementById('audio3');
+        if (a3){ a3.pause(); a3.currentTime = 0; }
+        document.getElementById('cd').classList.remove('spin');
+        hide(gift3Detail); show(giftsPage);
+        return;
+      }
+
+      // Play CD (gift3)
+      if (e.target.closest('#playSong3')) {
+        const a3 = document.getElementById('audio3');
+        if (a3){ a3.currentTime = 0; a3.play(); document.getElementById('cd').classList.add('spin'); a3.onended = ()=> document.getElementById('cd').classList.remove('spin'); }
+        return;
+      }
     });
 
-    document.getElementById('backToGifts1').addEventListener('click', ()=>{
+    // prevent accidental autoplay on load
+    window.addEventListener('load', ()=>{
       const a = document.getElementById('audio1');
-      a.pause(); a.currentTime = 0;
-      gift1Detail.classList.add('hidden');
-      giftsPage.classList.remove('hidden');
-    });
-
-    // ⭐ FIXED: GIFT 2 BACK BUTTON
-    document.getElementById('backToGifts2').addEventListener('click', ()=>{
-      gift2Detail.classList.add('hidden');
-      giftsPage.classList.remove('hidden');
-    });
-
-    // GIFT 2
-    document.getElementById('gift2').addEventListener('click', ()=>{
-      giftsPage.classList.add('hidden');
-      gift2Detail.classList.remove('hidden');
-    });
-
-    // GIFT 3
-    document.getElementById('gift3').addEventListener('click', ()=>{
-      giftsPage.classList.add('hidden');
-      gift3Detail.classList.remove('hidden');
-    });
-
-    document.getElementById('playSong3').addEventListener('click', ()=>{
-      const a3 = document.getElementById('audio3');
-      a3.currentTime = 0; 
-      a3.play();
-      document.getElementById('cd').classList.add('spin');
-      a3.onended = ()=> document.getElementById('cd').classList.remove('spin');
-    });
-
-    document.getElementById('backToGifts3').addEventListener('click', ()=>{
-      const a3 = document.getElementById('audio3');
-      a3.pause(); a3.currentTime = 0;
-      document.getElementById('cd').classList.remove('spin');
-      gift3Detail.classList.add('hidden');
-      giftsPage.classList.remove('hidden');
+      if (a){ a.pause(); a.currentTime = 0; }
     });
   </script>
 
 </body>
 </html>
+
 
 
