@@ -115,7 +115,7 @@ alt="cat image">
     <!-- GIFT 2 -->
     <section id="gift2Detail" class="hidden detail">
       <div class="polaroid">
-        <img id="polaroidImg" src="GIFT2_IMG_PATH" alt="polaroid">
+        <img id="polaroidImg" src="gift2.jpg" alt="polaroid">
       </div>
       <div class="quote">One, two, three… smile!</div>
       <div class="quote" style="margin-top:6px;font-size:16px">
@@ -146,6 +146,7 @@ alt="cat image">
 
   <!-- AUDIO -->
   <audio id="audio1" preload="auto" src="song1.mp3"></audio>
+  <audio id="audio2" preload="auto" src="song2.mp3"></audio>
   <audio id="audio3" src="SONG3_PATH"></audio>
 
   <script>
@@ -181,14 +182,21 @@ alt="cat image">
       if (e.target.closest('#gift1')) {
         hide(giftsPage); show(gift1Detail);
         const audio = document.getElementById('audio1');
-        audio.pause(); audio.currentTime = 0;
-        audio.play().catch(()=>{});
+        if (audio){ audio.pause(); audio.currentTime = 0; audio.play().catch(()=>{}); }
+        // stop other audios
+        const a2 = document.getElementById('audio2'); if(a2){ a2.pause(); a2.currentTime = 0; }
+        const a3 = document.getElementById('audio3'); if(a3){ a3.pause(); a3.currentTime = 0; document.getElementById('cd').classList.remove('spin'); }
         return;
       }
 
       // Gift 2 open
       if (e.target.closest('#gift2')) {
         hide(giftsPage); show(gift2Detail);
+        // stop others and play audio2
+        const a1 = document.getElementById('audio1'); if(a1){ a1.pause(); a1.currentTime = 0; }
+        const a3 = document.getElementById('audio3'); if(a3){ a3.pause(); a3.currentTime = 0; document.getElementById('cd').classList.remove('spin'); }
+        const a2 = document.getElementById('audio2');
+        if(a2){ a2.currentTime = 0; a2.play().catch(()=>{}); }
         return;
       }
 
@@ -208,6 +216,8 @@ alt="cat image">
 
       // Back from Gift2
       if (e.target.closest('#backToGifts2')) {
+        const a2 = document.getElementById('audio2');
+        if (a2){ a2.pause(); a2.currentTime = 0; }
         hide(gift2Detail); show(giftsPage);
         return;
       }
@@ -233,11 +243,14 @@ alt="cat image">
     window.addEventListener('load', ()=>{
       const a = document.getElementById('audio1');
       if (a){ a.pause(); a.currentTime = 0; }
+      const a2 = document.getElementById('audio2');
+      if (a2){ a2.pause(); a2.currentTime = 0; }
     });
   </script>
 
 </body>
 </html>
+
 
 
 
