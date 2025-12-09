@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Surprise Birthday Gift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#fffefb;--card:#fff;--accent:#ff6b6b;--muted:#666;}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
+    body{background:linear-gradient(180deg,#fff,#f7fff7);display:flex;align-items:center;justify-content:center;padding:20px;}
+    .wrap{width:980px;max-width:98%;background:var(--card);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.08);overflow:hidden;}
+    header{padding:28px;border-bottom:1px solid rgba(0,0,0,0.04);}
+    h1{margin:0;font-size:30px;font-weight:800;color:#000;}
+    .center{padding:34px;text-align:center;}
+    .bold-black{font-weight:900;color:#000;font-size:30px;margin-bottom:18px;}
+    img.cat{max-width:360px;width:70%;height:auto;border-radius:10px;margin:12px 0;display:block;margin-left:auto;margin-right:auto;}
+    .buttons{display:flex;gap:14px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
+    button.btn{background:var(--accent);border:0;color:#fff;padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(255,107,129,0.16);}
+    button.btn.alt{background:#e0e0e0;color:#111}
+    .hidden{display:none!important}
+    /* second overlay (I don't need gift -> try again) */
+    .overlay{padding:30px;text-align:center;}
+    .small-note{color:var(--muted);margin-top:8px;font-size:15px}
+    /* gifts page */
+    .gifts{display:flex;gap:12px;justify-content:center;padding:22px;flex-wrap:wrap}
+    .gift-card{width:28%;min-width:180px;background:#fff;border-radius:10px;padding:12px;text-align:center;cursor:pointer;box-shadow:0 6px 18px rgba(16,16,16,0.06)}
+    .gift-card img{max-width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .controls-bottom{display:flex;justify-content:center;padding:18px;border-top:1px solid rgba(0,0,0,0.04);gap:12px}
+    .back-btn{background:#f0f0f0;color:#111;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    /* modal detail */
+    .detail{padding:26px;text-align:center}
+    .paper-text{font-family:'Playfair Display', serif;font-size:46px;color:#3b2b2b;margin:12px 0}
+    .polaroid{width:260px;margin:14px auto;background:#fff;padding:12px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.08);}
+    .polaroid img{width:100%;height:180px;object-fit:cover;border-radius:6px}
+    .quote{font-family:'Indie Flower', cursive;font-size:20px;margin-top:12px;color:#222}
+    /* CD rotating */
+    .cd-wrap{display:flex;align-items:center;flex-direction:column;gap:14px}
+    .cd{width:180px;height:180px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%, #ddd,#bbb);box-shadow:0 10px 30px rgba(0,0,0,0.08);}
+    .cd img{width:75%;height:75%;object-fit:contain;border-radius:50%}
+    .spin{animation:spin 3s linear infinite}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    /* responsive */
+    @media (max-width:900px){.gift-card{width:45%} .paper-text{font-size:34px} img.cat{width:90%}}
+    @media (max-width:520px){.gift-card{width:100%} .paper-text{font-size:28px} .cd{width:140px;height:140px}}
+  </style>
+</head>
+
+
+<body>
+
+<body>
+
+  <!-- paste this overlay block here -->
+  <div id="tapOverlay" style="display:none;position:fixed;inset:0;z-index:9999;
+    background:rgba(0,0,0,0.45);color:#fff;align-items:center;justify-content:center;
+    display:flex;text-align:center;padding:20px">
+    <div style="background:rgba(255,255,255,0.06);padding:16px;border-radius:10px;">
+      Tap anywhere to start the surprise 🎵
+    </div>
+  </div>
+  <!-- overlay block ends -->
+
+  <div class="wrap" id="app">
+
+  <div class="wrap" id="app">
+    <!-- FIRST PAGE -->
+    <header id="page1">
+      <div class="center">
+        <div class="bold-black">here's my gift, accept it</div>
+        <!-- Cat image placeholder: replace CAT_IMG_PATH with your file path or URL -->
+        <img id="catImage1" class="cat" 
+src="https://i.pinimg.com/736x/09/9f/30/099f30285d042599035d5bb3f4ca34c3.jpg" 
+alt="cat image">
+
+
+
+        <div class="buttons">
+          <button class="btn" id="openGiftBtn">Open my gift</button>
+          <button class="btn alt" id="dontNeedBtn">I don't need gift</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- I DON'T NEED -> try again overlay -->
+    <section id="pageTry" class="overlay hidden">
+      <div class="center">
+        <div class="bold-black">I gifted you, please accept it 🥺</div>
+
+        <img id="catImage2" class="cat" src="https://i.pinimg.com/736x/07/34/8e/07348ec4f1163dc218b4b0fe1995b90d.jpg
+" alt="cat image">
+        <div class="small-note">It took me time to make this for you. Please, just try again?</div>
+        <div class="buttons">
+          <button class="btn" id="tryAgainBtn">Try again</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GIFTS PAGE with 3 images horizontally -->
+    <section id="giftsPage" class="hidden">
+      <div class="center">
+        <div style="font-weight:800;font-size:24px;margin-bottom:8px">Here is your gift — click 1st gift box</div>
+        <div class="gifts">
+          <div class="gift-card" data-gift="1" id="gift1">
+            <img src="https://i.pinimg.com/474x/f3/5b/11/f35b11e7af38bfb48b89ba7dfab6b533.jpg
+" alt="gift 1">
+            
+          </div>
+          <div class="gift-card" data-gift="2" id="gift2">
+            <img src="https://i.pinimg.com/474x/f3/5b/11/f35b11e7af38bfb48b89ba7dfab6b533.jpg
+" alt="gift 2">
+            
+          </div>
+          <div class="gift-card" data-gift="3" id="gift3">
+            <img src="https://i.pinimg.com/474x/f3/5b/11/f35b11e7af38bfb48b89ba7dfab6b533.jpg
+" alt="gift 3">
+            
+          </div>
+        </div>
+      </div>
+      <div class="controls-bottom">
+        <button class="back-btn" id="backToStartFromGifts">Back</button>
+      </div>
+    </section>
+
+    <!-- GIFT 1 DETAIL -->
+    <section id="gift1Detail" class="hidden detail">
+      <div class="paper-text">Happy Birthday!</div>
+      <div style="max-width:760px;margin:0 auto"> <!-- instructions for font effect -->
+        <div style="font-size:18px;color:#444">Wishing you all the joy and cake today. Click the play icon if sound doesn't start automatically.</div>
+      </div>
+      
+      <div style="margin-top:18px">
+        <button class="back-btn" id="backToGifts1">Back to gifts</button>
+      </div>
+    </section>
+
+    <!-- GIFT 2 DETAIL: Polaroid + quotes -->
+    <section id="gift2Detail" class="hidden detail">
+      <div class="polaroid">
+        <img id="polaroidImg" src="GIFT2_IMG_PATH" alt="polaroid">
+      </div>
+      <div class="quote">One, two, three… smile!</div>
+      <div class="quote" style="margin-top:6px;font-size:16px">"Capture the moment — you were born to frame the world."</div>
+      <div style="margin-top:18px">
+        <button class="back-btn" id="backToGifts2">Back to gifts</button>
+      </div>
+    </section>
+
+    <!-- GIFT 3 DETAIL: CD rotating + song -->
+    <section id="gift3Detail" class="hidden detail">
+      <div class="cd-wrap">
+        <div id="cd" class="cd"><img id="cdInner" src="GIFT3_IMG_PATH" alt="cd image"></div>
+        <div style="max-width:720px;text-align:center">"If Vecna poses to you, I will save you." — Happy Birthday!</div>
+        <div style="margin-top:14px">
+          <button class="btn" id="playSong3">Play CD song</button>
+        </div>
+        <div style="margin-top:12px">
+          <button class="back-btn" id="backToGifts3">Back to gifts</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <audio id="audio1" preload="auto" src="song1.mp3"></audio>
+
+
+  <audio id="audio3" src="SONG3_PATH"></audio>
+
+  <script>
+    // ======= USER CUSTOMIZATION INSTRUCTIONS =======
+    // Replace the following placeholder strings in the HTML with actual paths or URLs:
+    // CAT_IMG_PATH  -> path/URL to your cat image (used in page1 and try page)
+    // GIFT1_IMG_PATH -> image for gift 1 (first horizontal image)
+    // GIFT2_IMG_PATH -> image for gift 2 (polaroid)
+    // GIFT3_IMG_PATH -> image for gift 3 (cd image)
+    // SONG1_PATH -> direct link or relative path to the audio file for gift 1 (mp3)
+    // SONG3_PATH -> direct link or relative path to the audio file for gift 3 (mp3)
+    //
+    // How to add images / songs:
+    // 1) If you're sending the HTML file directly to her, put the images and audio files in the same folder as the HTML file,
+    //    and replace placeholders with the filenames (e.g., "cat.jpg", "song1.mp3").
+    // 2) If you host the files online, use full URLs (e.g., "https://example.com/cat.jpg").
+    // 3) You can also use data URLs (base64) but that's large — not recommended for big files.
+    //
+    // NOTE about auto-play: clicking a gift counts as a user gesture in most browsers, so audio.play() should be allowed.
+    // =================================================
+
+    const page1 = document.getElementById('page1');
+    const pageTry = document.getElementById('pageTry');
+    const giftsPage = document.getElementById('giftsPage');
+    const gift1Detail = document.getElementById('gift1Detail');
+    const gift2Detail = document.getElementById('gift2Detail');
+    const gift3Detail = document.getElementById('gift3Detail');
+
+    // Buttons
+    document.getElementById('dontNeedBtn').addEventListener('click', ()=>{
+      page1.classList.add('hidden');
+      pageTry.classList.remove('hidden');
+    });
+    document.getElementById('tryAgainBtn').addEventListener('click', ()=>{
+      pageTry.classList.add('hidden');
+      page1.classList.remove('hidden');
+    });
+    document.getElementById('openGiftBtn').addEventListener('click', ()=>{
+      page1.classList.add('hidden');
+      giftsPage.classList.remove('hidden');
+    });
+
+    document.getElementById('backToStartFromGifts').addEventListener('click', ()=>{
+      giftsPage.classList.add('hidden');
+      page1.classList.remove('hidden');
+    });
+
+
+
+    // gift clicks
+    document.getElementById('gift1').addEventListener('click', ()=>{
+  giftsPage.classList.add('hidden');
+  gift1Detail.classList.remove('hidden');
+
+  const audio = document.getElementById('audio1');
+
+  audio.currentTime = 0;
+  audio.play().catch(()=>{ 
+    // show tiny tap overlay
+    document.getElementById('tapOverlay').style.display = 'flex';
+  });
+});
+
+document.getElementById('tapOverlay').addEventListener('click', ()=>{
+  document.getElementById('tapOverlay').style.display = 'none';
+  const audio = document.getElementById('audio1');
+  audio.currentTime = 0;
+  audio.play();
+});
+
+
+
+    document.getElementById('gift2').addEventListener('click', ()=>{
+      giftsPage.classList.add('hidden');
+      gift2Detail.classList.remove('hidden');
+    });
+    document.getElementById('gift3').addEventListener('click', ()=>{
+      giftsPage.classList.add('hidden');
+      gift3Detail.classList.remove('hidden');
+      // nothing auto-starts here until play clicked
+    });
+
+
+
+    // back buttons from details
+    document.getElementById('backToGifts1').addEventListener('click', ()=>{
+      gift1Detail.classList.add('hidden');
+      giftsPage.classList.remove('hidden');
+      // stop audio
+      const a = document.getElementById('audio1'); a.pause(); a.currentTime=0;
+    });
+    document.getElementById('backToGifts2').addEventListener('click', ()=>{
+      gift2Detail.classList.add('hidden');
+      giftsPage.classList.remove('hidden');
+    });
+    document.getElementById('backToGifts3').addEventListener('click', ()=>{
+      gift3Detail.classList.add('hidden');
+      giftsPage.classList.remove('hidden');
+      // stop CD song
+      const a3 = document.getElementById('audio3'); a3.pause(); a3.currentTime=0;
+      document.getElementById('cd').classList.remove('spin');
+    });
+
+    
+    document.getElementById('playSong3').addEventListener('click', ()=>{
+      const a3 = document.getElementById('audio3');
+      a3.currentTime = 0; a3.play();
+      // add spin class to cd
+      document.getElementById('cd').classList.add('spin');
+      // when song ends, stop spinning
+      a3.onended = ()=>{ document.getElementById('cd').classList.remove('spin'); }
+    });
+
+    // ensure audio3 stops & spin on pause
+    const audio3 = document.getElementById('audio3');
+    audio3.onpause = ()=>{ document.getElementById('cd').classList.remove('spin'); }
+
+    // Accessibility: basic keyboard navigation (Esc to back)
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        // if in any detail, go back to gifts; if in gifts, back to start; if try, back to start
+        if(!gift1Detail.classList.contains('hidden') || !gift2Detail.classList.contains('hidden') || !gift3Detail.classList.contains('hidden')){
+          gift1Detail.classList.add('hidden');
+          gift2Detail.classList.add('hidden');
+          gift3Detail.classList.add('hidden');
+          giftsPage.classList.remove('hidden');
+        } else if(!giftsPage.classList.contains('hidden')){
+          giftsPage.classList.add('hidden');
+          page1.classList.remove('hidden');
+        } else if(!pageTry.classList.contains('hidden')){
+          pageTry.classList.add('hidden');
+          page1.classList.remove('hidden');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
