@@ -10,6 +10,27 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <style>
+
+@media (max-width: 720px) {
+  #gift4Detail {
+    padding-top: 60px !important;   /* pushes title fully into view */
+  }
+
+  #gift4Detail .paper-text {
+    font-size: 34px !important;     /* optional: slightly smaller so it fits cleanly */
+  }
+}
+
+@media (max-width: 380px) {
+  #gift4Detail {
+    padding-top: 75px !important;
+  }
+  #gift4Detail .paper-text {
+    font-size: 30px !important;
+  }
+}
+
+
     :root{--bg:#fffefb;--card:#fff;--accent:#ff6b6b;--muted:#666;}
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
@@ -173,7 +194,7 @@ don’t worry, Spotify Premium pottacchum unna save panren!!!😂😌🎧
     </section>
 
     <!-- GIFT 4 (NEW: HISB - timeline = 12/12/2020) -->
-    <section id="gift4Detail" class="hidden detail" style="padding-top:100px;">
+    <section id="gift4Detail" class="hidden detail" style="padding-top:60px;">
 
       <div class="paper-text">Timeline – 12/12/2020</div>
 
