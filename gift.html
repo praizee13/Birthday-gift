@@ -11,6 +11,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <style>
 
+/* ONLY for Gift 4: ensure top lines are not hidden */
+#gift4Detail {
+  position: relative;
+  padding-top: 140px !important;   /* ensure plenty of room for the title */
+  box-sizing: border-box;
+  z-index: 1200;
+  max-height: 88vh;                /* keep section contained on small screens */
+  overflow-y: auto;                /* allow internal scrolling if needed */
+  -webkit-overflow-scrolling: touch;
+}
+
+#gift4Detail .paper-text {
+  position: relative;
+  z-index: 1210;
+  margin-top: 0;
+}
+
+
 @media (max-width: 720px) {
   #gift4Detail {
     padding-top: 60px !important;   /* pushes title fully into view */
@@ -65,6 +83,77 @@
     /* make video responsive */
     .video-wrap{width:100%;max-width:760px;margin-top:14px}
     .video-wrap video{width:100%;height:auto;border-radius:12px;background:#fff;display:block}
+
+// --- Gift4 visibility fix: ensure top 4 lines show on phones ---
+(function(){
+  const wrap = document.querySelector('.wrap');
+  const gift4Detail = document.getElementById('gift4Detail');
+  const gift4Card = document.getElementById('gift4');
+  const backBtnSelector = '#backToGifts4';
+
+  // remember original overflow to restore later
+  const originalWrapOverflow = wrap ? wrap.style.overflow : '';
+
+  function openFix() {
+    if (!wrap || !gift4Detail) return;
+    // allow scrolling inside wrap (so content won't be clipped)
+    wrap.style.overflow = 'auto';
+    // small delay to let layout settle then scroll the gift4Detail to top of wrap
+    setTimeout(()=>{
+      try {
+        // scroll the wrapper so gift4Detail top is visible
+        // compute target relative to wrap
+        const rect = gift4Detail.getBoundingClientRect();
+        const wrapRect = wrap.getBoundingClientRect();
+        const offset = rect.top - wrapRect.top - 12; // small breathing room
+        wrap.scrollTop = Math.max(0, offset + wrap.scrollTop);
+        // also ensure the section itself is scrolled to its start
+        gift4Detail.scrollTop = 0;
+        // finally smooth scroll the first element into view (some browsers)
+        gift4Detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch(e){}
+    }, 180);
+  }
+
+  function closeFix() {
+    if (!wrap) return;
+    // restore overflow after a short delay so transition looks smooth
+    setTimeout(()=> { wrap.style.overflow = originalWrapOverflow || ''; }, 150);
+  }
+
+  // Observe class change to gift4Detail and trigger openFix when it becomes visible
+  if (gift4Detail) {
+    try {
+      const mo = new MutationObserver((entries) => {
+        entries.forEach(ent => {
+          if (ent.attributeName === 'class') {
+            const isVisible = !gift4Detail.classList.contains('hidden');
+            if (isVisible) openFix();
+            else closeFix();
+          }
+        });
+      });
+      mo.observe(gift4Detail, { attributes: true, attributeFilter: ['class'] });
+    } catch(e){}
+  }
+
+  // Also handle click on gift4 card (if it opens it directly)
+  if (gift4Card) {
+    gift4Card.addEventListener('click', ()=> {
+      // short delay to allow existing handler to show the section
+      setTimeout(openFix, 220);
+    });
+  }
+
+  // handle back button (in case your delegated handler hides gift4Detail)
+  document.addEventListener('click', function(e){
+    if (e.target.closest && e.target.closest(backBtnSelector)) {
+      // allow the existing handlers to run then restore overflow
+      setTimeout(closeFix, 160);
+    }
+  });
+})();
+
   </style>
 </head>
 
